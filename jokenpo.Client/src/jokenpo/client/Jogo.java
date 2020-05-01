@@ -20,6 +20,9 @@ public class Jogo extends javax.swing.JFrame {
     private Jokenpo model;
     private final JokenpoClient controller = new JokenpoClient();
     private static String name; 
+    private int tipoJogo = 0;
+    private int rodadas = 0;
+    private int finish = 5;
     
     /**
      * Creates new form Jogo
@@ -35,12 +38,13 @@ public class Jogo extends javax.swing.JFrame {
                                           "Erro", JOptionPane.ERROR_MESSAGE);
         else if (result == true)
         {
-            pnlJogada.setVisible(true);
             pnlInicio.setVisible(false);
+            pnlJogada.setVisible(true);
             btnSair.setVisible(true);
             pnlPlacar.setVisible(true);
-            Placar();
-            model = new Jokenpo();
+            pnlJogadas.setVisible(true);
+            pnlStart.setVisible(false);
+            lblJogador1.setText(name);
         }
         else
             JOptionPane.showMessageDialog(this, "Não há jogadores disponíveis no momento!",
@@ -54,10 +58,83 @@ public class Jogo extends javax.swing.JFrame {
         btnJogador.setEnabled((txtNome.getText() != null));
         btnSair.setVisible(false);
         pnlPlacar.setVisible(false);
+        pnlJogadas.setVisible(false);
+        pnlStart.setVisible(true);
+        pnlResultado.setVisible(false);
+        ResetJogo();
     }
     
-    public void Placar() {
+    private void GerarJogada()
+    {
+        String jogador1 = lblJogada1.getText();
+        String jogador2 = GetRandom();
+        int placar1 = Integer.parseInt(lblMeuPlacar.getText());
+        int placar2 = Integer.parseInt(lblPlacarOponente.getText());
+        boolean empate = false;
+        rodadas += 1;
         
+        lblJogada2.setText(jogador2);
+        
+        if (jogador1 == "Pedra")
+        {
+            if (jogador2 == "Papel")
+                lblPlacarOponente.setText(String.valueOf(placar2 + 1));
+            else if (jogador2 == "Tesoura")
+                lblMeuPlacar.setText(String.valueOf((placar1 + 1)));
+            else
+                empate = true;
+        }
+        else if (jogador1 == "Papel")
+        {
+            if (jogador2 == "Tesoura")
+                lblPlacarOponente.setText(String.valueOf(placar2 + 1));
+            else if (jogador2 == "Pedra")
+                lblMeuPlacar.setText(String.valueOf((placar1 + 1)));
+            else
+                empate = true;
+        }
+        else
+        {
+            if (jogador2 == "Pedra")
+                lblPlacarOponente.setText(String.valueOf(placar2 + 1));
+            else if (jogador2 == "Papel")
+                lblMeuPlacar.setText(String.valueOf((placar1 + 1)));
+            else
+                empate = true;
+        }
+        
+        if (rodadas == finish)
+        {
+            String mensagem = "Você venceu! :)";
+            if (placar1 == placar2)
+                mensagem = "Você empatou! ;)";
+            else if (placar2 > placar1)
+                mensagem = "Você perdeu... :(";
+            lblResultado.setText(mensagem);
+            pnlPlacar.setVisible(false);
+            pnlJogada.setVisible(false);
+            pnlJogadas.setVisible(false);
+            pnlResultado.setVisible(true);
+        }
+    }
+    
+    private String GetRandom() 
+    {
+        int r = (int) (Math.random()*3);
+        String name = new String [] {"Pedra", "Papel", "Tesoura"}[r];
+        return name;
+    }
+    
+    private void ResetJogo()
+    {
+        lblJogador1.setText("Jogador");
+        lblOponente1.setText("CPU");
+        lblMeuPlacar.setText("0");
+        lblPlacarOponente.setText("0");
+        lblJogada1.setText("");
+        lblJogada2.setText("");
+        rodadas = 0;
+        tipoJogo = 0;
     }
 
     /**
@@ -73,9 +150,6 @@ public class Jogo extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         pnlInicio = new javax.swing.JPanel();
-        btnCPU = new javax.swing.JButton();
-        btnJogador = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         txtNome = new javax.swing.JTextField();
@@ -87,10 +161,21 @@ public class Jogo extends javax.swing.JFrame {
         pnlPlacar = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         lblNome = new javax.swing.JLabel();
-        lblOponente = new javax.swing.JLabel();
+        lblJogador1 = new javax.swing.JLabel();
         lblMeuPlacar = new javax.swing.JLabel();
         lblPlacarOponente = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        lblOponente1 = new javax.swing.JLabel();
+        pnlJogadas = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        lblJogada2 = new javax.swing.JLabel();
+        lblJogada1 = new javax.swing.JLabel();
+        pnlResultado = new javax.swing.JPanel();
+        lblResultado = new javax.swing.JLabel();
+        pnlStart = new javax.swing.JPanel();
+        btnCPU = new javax.swing.JButton();
+        btnJogador = new javax.swing.JButton();
 
         jLabel1.setText("jLabel1");
 
@@ -98,32 +183,19 @@ public class Jogo extends javax.swing.JFrame {
         setBackground(new java.awt.Color(230, 194, 81));
 
         jPanel1.setBackground(new java.awt.Color(243, 190, 42));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jokenpo/assets/logo.png"))); // NOI18N
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(623, 360, -1, -1));
 
         pnlInicio.setBackground(new java.awt.Color(243, 190, 43));
-
-        btnCPU.setText("CPU");
-        btnCPU.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCPUActionPerformed(evt);
-            }
-        });
-
-        btnJogador.setText("Jogador");
-        btnJogador.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnJogadorActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(75, 50, 39));
-        jLabel4.setText("Jogar contra");
+        pnlInicio.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel3.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(75, 50, 39));
         jLabel3.setText("Pode me chamar de");
+        pnlInicio.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 15, -1, -1));
+        pnlInicio.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(198, 52, 199, 10));
 
         txtNome.setBackground(new java.awt.Color(243, 190, 43));
         txtNome.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
@@ -135,80 +207,38 @@ public class Jogo extends javax.swing.JFrame {
                 txtNomeKeyTyped(evt);
             }
         });
+        pnlInicio.add(txtNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(207, 11, 170, 35));
 
-        javax.swing.GroupLayout pnlInicioLayout = new javax.swing.GroupLayout(pnlInicio);
-        pnlInicio.setLayout(pnlInicioLayout);
-        pnlInicioLayout.setHorizontalGroup(
-            pnlInicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlInicioLayout.createSequentialGroup()
-                .addGap(146, 146, 146)
-                .addComponent(jLabel4)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlInicioLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlInicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlInicioLayout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 20, 20))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlInicioLayout.createSequentialGroup()
-                        .addComponent(btnCPU, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnJogador, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlInicioLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        pnlInicioLayout.setVerticalGroup(
-            pnlInicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlInicioLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlInicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
-                .addComponent(jLabel4)
-                .addGap(27, 27, 27)
-                .addGroup(pnlInicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCPU, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnJogador, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
-        );
+        jPanel1.add(pnlInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 130, 407, 70));
 
         pnlJogada.setBackground(new java.awt.Color(243, 190, 43));
+        pnlJogada.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btnPedra.setText("Pedra");
+        btnPedra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPedraActionPerformed(evt);
+            }
+        });
+        pnlJogada.add(btnPedra, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 19, 95, 123));
 
         btnPapel.setText("Papel");
+        btnPapel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPapelActionPerformed(evt);
+            }
+        });
+        pnlJogada.add(btnPapel, new org.netbeans.lib.awtextra.AbsoluteConstraints(155, 19, 95, 123));
 
         btnTesoura.setText("Tesoura");
+        btnTesoura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTesouraActionPerformed(evt);
+            }
+        });
+        pnlJogada.add(btnTesoura, new org.netbeans.lib.awtextra.AbsoluteConstraints(281, 19, 95, 123));
 
-        javax.swing.GroupLayout pnlJogadaLayout = new javax.swing.GroupLayout(pnlJogada);
-        pnlJogada.setLayout(pnlJogadaLayout);
-        pnlJogadaLayout.setHorizontalGroup(
-            pnlJogadaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlJogadaLayout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addComponent(btnPedra, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
-                .addComponent(btnPapel, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
-                .addComponent(btnTesoura, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(31, Short.MAX_VALUE))
-        );
-        pnlJogadaLayout.setVerticalGroup(
-            pnlJogadaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlJogadaLayout.createSequentialGroup()
-                .addContainerGap(19, Short.MAX_VALUE)
-                .addGroup(pnlJogadaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnPedra, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnPapel, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTesoura, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
+        jPanel1.add(pnlJogada, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 421, -1, -1));
 
         btnSair.setText("Sair");
         btnSair.addActionListener(new java.awt.event.ActionListener() {
@@ -216,122 +246,115 @@ public class Jogo extends javax.swing.JFrame {
                 btnSairActionPerformed(evt);
             }
         });
+        jPanel1.add(btnSair, new org.netbeans.lib.awtextra.AbsoluteConstraints(787, 11, -1, -1));
 
         pnlPlacar.setBackground(new java.awt.Color(243, 190, 43));
+        pnlPlacar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel5.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(75, 50, 39));
         jLabel5.setText("Placar");
+        pnlPlacar.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 10, -1, -1));
 
+        lblNome.setBackground(new java.awt.Color(243, 190, 42));
         lblNome.setFont(new java.awt.Font("Comic Sans MS", 1, 14)); // NOI18N
-        lblNome.setForeground(new java.awt.Color(255, 255, 255));
+        lblNome.setForeground(new java.awt.Color(241, 90, 41));
         lblNome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblNome.setText("Jogo 1");
+        pnlPlacar.add(lblNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(64, 55, 99, -1));
 
-        lblOponente.setFont(new java.awt.Font("Comic Sans MS", 1, 14)); // NOI18N
-        lblOponente.setForeground(new java.awt.Color(255, 255, 255));
-        lblOponente.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblOponente.setText("Jogo 5");
+        lblJogador1.setFont(new java.awt.Font("Comic Sans MS", 1, 14)); // NOI18N
+        lblJogador1.setForeground(new java.awt.Color(241, 90, 41));
+        lblJogador1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblJogador1.setText("Jogador");
+        pnlPlacar.add(lblJogador1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 40, 100, -1));
+        lblJogador1.getAccessibleContext().setAccessibleName("Jogador");
 
         lblMeuPlacar.setBackground(new java.awt.Color(255, 0, 51));
         lblMeuPlacar.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         lblMeuPlacar.setForeground(new java.awt.Color(255, 255, 255));
         lblMeuPlacar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblMeuPlacar.setText("D");
+        lblMeuPlacar.setText("0");
+        pnlPlacar.add(lblMeuPlacar, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 70, 45, 31));
 
         lblPlacarOponente.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         lblPlacarOponente.setForeground(new java.awt.Color(255, 255, 255));
         lblPlacarOponente.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblPlacarOponente.setText("V");
+        lblPlacarOponente.setText("0");
+        pnlPlacar.add(lblPlacarOponente, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 70, 45, 31));
 
-        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(75, 50, 39));
-        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel11.setText("X");
+        jLabel13.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(75, 50, 39));
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel13.setText("X");
+        pnlPlacar.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(179, 45, 53, -1));
 
-        javax.swing.GroupLayout pnlPlacarLayout = new javax.swing.GroupLayout(pnlPlacar);
-        pnlPlacar.setLayout(pnlPlacarLayout);
-        pnlPlacarLayout.setHorizontalGroup(
-            pnlPlacarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlPlacarLayout.createSequentialGroup()
-                .addGroup(pnlPlacarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlPlacarLayout.createSequentialGroup()
-                        .addGap(88, 88, 88)
-                        .addComponent(lblMeuPlacar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlPlacarLayout.createSequentialGroup()
-                        .addGap(64, 64, 64)
-                        .addComponent(lblNome, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlPlacarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGroup(pnlPlacarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlPlacarLayout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(lblPlacarOponente, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlPlacarLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblOponente, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(76, Short.MAX_VALUE))
-        );
-        pnlPlacarLayout.setVerticalGroup(
-            pnlPlacarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlPlacarLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel5)
-                .addGap(18, 18, 18)
-                .addGroup(pnlPlacarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlPlacarLayout.createSequentialGroup()
-                        .addGroup(pnlPlacarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblNome)
-                            .addComponent(lblOponente))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnlPlacarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblMeuPlacar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblPlacarOponente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
+        jLabel14.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(75, 50, 39));
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel14.setText("X");
+        pnlPlacar.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(179, 45, 53, -1));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(210, 210, 210)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(pnlPlacar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(pnlInicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(pnlJogada, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnSair)
-                        .addContainerGap())))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnSair)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(pnlPlacar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(pnlInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 24, Short.MAX_VALUE)
-                .addComponent(pnlJogada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
+        lblOponente1.setFont(new java.awt.Font("Comic Sans MS", 1, 14)); // NOI18N
+        lblOponente1.setForeground(new java.awt.Color(241, 90, 41));
+        lblOponente1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblOponente1.setText("CPU");
+        pnlPlacar.add(lblOponente1, new org.netbeans.lib.awtextra.AbsoluteConstraints(239, 40, 90, -1));
+
+        jPanel1.add(pnlPlacar, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 0, -1, -1));
+
+        pnlJogadas.setBackground(new java.awt.Color(243, 190, 42));
+        pnlJogadas.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel12.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(75, 50, 39));
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel12.setText("X");
+        pnlJogadas.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 40, 53, -1));
+
+        lblJogada2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        pnlJogadas.add(lblJogada2, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 20, 90, 110));
+
+        lblJogada1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        pnlJogadas.add(lblJogada1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 100, 110));
+
+        jPanel1.add(pnlJogadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 200, 400, 140));
+
+        pnlResultado.setBackground(new java.awt.Color(243, 190, 42));
+        pnlResultado.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        lblResultado.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        lblResultado.setForeground(new java.awt.Color(75, 50, 39));
+        lblResultado.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnlResultado.add(lblResultado, new org.netbeans.lib.awtextra.AbsoluteConstraints(42, 65, 330, -1));
+
+        jPanel1.add(pnlResultado, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 200, 500, 140));
+
+        pnlStart.setBackground(new java.awt.Color(243, 190, 42));
+        pnlStart.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        btnCPU.setText("CPU");
+        btnCPU.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCPUActionPerformed(evt);
+            }
+        });
+        pnlStart.add(btnCPU, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 143, 48));
+
+        btnJogador.setText("Jogador");
+        btnJogador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnJogadorActionPerformed(evt);
+            }
+        });
+        pnlStart.add(btnJogador, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, 143, 48));
+
+        jPanel1.add(pnlStart, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 340, 390, 70));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 856, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -343,12 +366,14 @@ public class Jogo extends javax.swing.JFrame {
 
     private void btnCPUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCPUActionPerformed
         name = txtNome.getText();
-        Boolean _result = controller.Server_PlayWithCPU(name);
-        Jogar(_result);
+        //Boolean _result = controller.Server_PlayWithCPU(name);
+        tipoJogo = 0;
+        Jogar(true);
     }//GEN-LAST:event_btnCPUActionPerformed
 
     private void btnJogadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJogadorActionPerformed
         name = txtNome.getText();
+        tipoJogo = 1;
         Boolean _result = controller.Server_PlayWithPlayer(name);
         Jogar(_result);
     }//GEN-LAST:event_btnJogadorActionPerformed
@@ -360,6 +385,24 @@ public class Jogo extends javax.swing.JFrame {
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
         Inicio();
     }//GEN-LAST:event_btnSairActionPerformed
+
+    private void btnPedraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPedraActionPerformed
+        lblJogada1.setText("Pedra");
+        if (tipoJogo == 0)
+            GerarJogada();
+    }//GEN-LAST:event_btnPedraActionPerformed
+
+    private void btnPapelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPapelActionPerformed
+        lblJogada1.setText("Papel");
+        if (tipoJogo == 0)
+            GerarJogada();
+    }//GEN-LAST:event_btnPapelActionPerformed
+
+    private void btnTesouraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTesouraActionPerformed
+        lblJogada1.setText("Tesoura");
+        if (tipoJogo == 0)
+            GerarJogada();
+    }//GEN-LAST:event_btnTesouraActionPerformed
 
     /**
      * @param args the command line arguments
@@ -404,20 +447,28 @@ public class Jogo extends javax.swing.JFrame {
     private javax.swing.JButton btnSair;
     private javax.swing.JButton btnTesoura;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lblJogada1;
+    private javax.swing.JLabel lblJogada2;
+    private javax.swing.JLabel lblJogador1;
     private javax.swing.JLabel lblMeuPlacar;
     private javax.swing.JLabel lblNome;
-    private javax.swing.JLabel lblOponente;
+    private javax.swing.JLabel lblOponente1;
     private javax.swing.JLabel lblPlacarOponente;
+    private javax.swing.JLabel lblResultado;
     private javax.swing.JPanel pnlInicio;
     private javax.swing.JPanel pnlJogada;
+    private javax.swing.JPanel pnlJogadas;
     private javax.swing.JPanel pnlPlacar;
+    private javax.swing.JPanel pnlResultado;
+    private javax.swing.JPanel pnlStart;
     private javax.swing.JTextField txtNome;
     // End of variables declaration//GEN-END:variables
 }
