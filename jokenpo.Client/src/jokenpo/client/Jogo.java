@@ -5,8 +5,8 @@
  */
 package jokenpo.client;
 
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import javax.swing.JOptionPane;
 import jokenpo.server.JokenpoServer;
 
@@ -33,44 +33,52 @@ public class Jogo extends javax.swing.JFrame {
     public void Jogar() {
         boolean result = true;
         name = txtNome.getText();
-        
-        if (tipoJogo == 1)
+     
+        if (name == null || name.trim().equals(""))
         {
-            try
-            {
-                server = new JokenpoServer(name);
-                String oponente = server.PlayOnline();
-                while (oponente == null)
-                {
-                    System.out.println("Aguarde enquanto encontramos um oponente...");
-                    oponente = server.PlayOnline();
-                }
-                lblOponente1.setText(oponente);
-            }
-            catch(Exception ex)
-            {
-                result = false;
-            }
-        }
-        
-        if (result == true)
-        {
-            pnlInicio.setVisible(false);
-            pnlJogada.setVisible(true);
-            btnSair.setVisible(true);
-            pnlPlacar.setVisible(true);
-            pnlJogadas.setVisible(true);
-            pnlStart.setVisible(false);
-            lblJogador1.setText(name);
-        }
-        else
-            JOptionPane.showMessageDialog(this, "Não há jogadores disponíveis no momento!",
+            JOptionPane.showMessageDialog(this, "Digite seu nome!",
                                           "Atenção", JOptionPane.WARNING_MESSAGE);
+        }
+        else {
+            if (tipoJogo == 1)
+            {
+                try
+                {
+                    server = new JokenpoServer(name);
+                    String oponente = server.PlayOnline();
+                    while (oponente == null)
+                    {
+                        System.out.println("Aguarde enquanto encontramos um oponente...");
+                        oponente = server.PlayOnline();
+                    }
+                    lblOponente1.setText(oponente);
+                }
+                catch(Exception ex)
+                {
+                    result = false;
+                }
+            }
+
+            if (result == true)
+            {
+                pnlInicio.setVisible(false);
+                pnlJogada.setVisible(true);
+                btnSair.setVisible(true);
+                pnlPlacar.setVisible(true);
+                pnlJogadas.setVisible(true);
+                pnlStart.setVisible(false);
+                lblJogador1.setText(name);
+            }
+            else
+                JOptionPane.showMessageDialog(this, "Não há jogadores disponíveis no momento!",
+                                              "Atenção", JOptionPane.WARNING_MESSAGE);
+        }
     }
     
     public void Sair()
     {
-        server.Sair();
+        if (tipoJogo == 1)
+            server.Sair();
         Inicio();
     }
     
@@ -192,17 +200,22 @@ public class Jogo extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         pnlInicio = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         txtNome = new javax.swing.JTextField();
-        pnlJogada = new javax.swing.JPanel();
-        btnPedra = new javax.swing.JButton();
-        btnPapel = new javax.swing.JButton();
-        btnTesoura = new javax.swing.JButton();
         btnSair = new javax.swing.JButton();
+        pnlJogada = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        btnPedra = new javax.swing.JButton();
+        jLabel11 = new javax.swing.JLabel();
+        btnPapel = new javax.swing.JButton();
+        jLabel15 = new javax.swing.JLabel();
+        btnTesoura = new javax.swing.JButton();
         pnlPlacar = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         lblNome = new javax.swing.JLabel();
@@ -214,15 +227,23 @@ public class Jogo extends javax.swing.JFrame {
         lblOponente1 = new javax.swing.JLabel();
         pnlJogadas = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
-        lblJogada2 = new javax.swing.JLabel();
         lblJogada1 = new javax.swing.JLabel();
+        lblJogada2 = new javax.swing.JLabel();
         pnlResultado = new javax.swing.JPanel();
         lblResultado = new javax.swing.JLabel();
         pnlStart = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
         btnCPU = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
         btnJogador = new javax.swing.JButton();
 
         jLabel1.setText("jLabel1");
+
+        jLabel6.setText("jLabel6");
+
+        jLabel4.setText("jLabel4");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(230, 194, 81));
@@ -256,35 +277,6 @@ public class Jogo extends javax.swing.JFrame {
 
         jPanel1.add(pnlInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 130, 407, 70));
 
-        pnlJogada.setBackground(new java.awt.Color(243, 190, 43));
-        pnlJogada.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        btnPedra.setText("Pedra");
-        btnPedra.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPedraActionPerformed(evt);
-            }
-        });
-        pnlJogada.add(btnPedra, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 19, 95, 123));
-
-        btnPapel.setText("Papel");
-        btnPapel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPapelActionPerformed(evt);
-            }
-        });
-        pnlJogada.add(btnPapel, new org.netbeans.lib.awtextra.AbsoluteConstraints(155, 19, 95, 123));
-
-        btnTesoura.setText("Tesoura");
-        btnTesoura.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTesouraActionPerformed(evt);
-            }
-        });
-        pnlJogada.add(btnTesoura, new org.netbeans.lib.awtextra.AbsoluteConstraints(281, 19, 95, 123));
-
-        jPanel1.add(pnlJogada, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 421, -1, -1));
-
         btnSair.setText("Sair");
         btnSair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -292,6 +284,52 @@ public class Jogo extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btnSair, new org.netbeans.lib.awtextra.AbsoluteConstraints(787, 11, -1, -1));
+
+        pnlJogada.setBackground(new java.awt.Color(243, 190, 43));
+        pnlJogada.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jokenpo/assets/letter-s.png"))); // NOI18N
+        pnlJogada.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 90, 110));
+
+        btnPedra.setBackground(new java.awt.Color(204, 204, 0));
+        btnPedra.setBorder(null);
+        btnPedra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPedraActionPerformed(evt);
+            }
+        });
+        pnlJogada.add(btnPedra, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 19, 95, 107));
+
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jokenpo/assets/hello.png"))); // NOI18N
+        pnlJogada.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 20, 90, 110));
+
+        btnPapel.setBackground(new java.awt.Color(0, 204, 204));
+        btnPapel.setBorder(null);
+        btnPapel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnPapel.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        btnPapel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPapelActionPerformed(evt);
+            }
+        });
+        pnlJogada.add(btnPapel, new org.netbeans.lib.awtextra.AbsoluteConstraints(155, 19, 95, 107));
+
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jokenpo/assets/letter-v.png"))); // NOI18N
+        pnlJogada.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 20, 100, 110));
+
+        btnTesoura.setBackground(new java.awt.Color(204, 0, 204));
+        btnTesoura.setBorder(null);
+        btnTesoura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTesouraActionPerformed(evt);
+            }
+        });
+        pnlJogada.add(btnTesoura, new org.netbeans.lib.awtextra.AbsoluteConstraints(281, 19, 95, 107));
+
+        jPanel1.add(pnlJogada, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 421, -1, -1));
 
         pnlPlacar.setBackground(new java.awt.Color(243, 190, 43));
         pnlPlacar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -312,7 +350,6 @@ public class Jogo extends javax.swing.JFrame {
         lblJogador1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblJogador1.setText("Jogador");
         pnlPlacar.add(lblJogador1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 40, 100, -1));
-        lblJogador1.getAccessibleContext().setAccessibleName("Jogador");
 
         lblMeuPlacar.setBackground(new java.awt.Color(255, 0, 51));
         lblMeuPlacar.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -356,11 +393,11 @@ public class Jogo extends javax.swing.JFrame {
         jLabel12.setText("X");
         pnlJogadas.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 40, 53, -1));
 
-        lblJogada2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        pnlJogadas.add(lblJogada2, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 20, 90, 110));
-
         lblJogada1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         pnlJogadas.add(lblJogada1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 100, 110));
+
+        lblJogada2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        pnlJogadas.add(lblJogada2, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 20, 100, 110));
 
         jPanel1.add(pnlJogadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 200, 400, 140));
 
@@ -377,23 +414,43 @@ public class Jogo extends javax.swing.JFrame {
         pnlStart.setBackground(new java.awt.Color(243, 190, 42));
         pnlStart.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        btnCPU.setText("CPU");
+        jLabel8.setFont(new java.awt.Font("Algerian", 1, 14)); // NOI18N
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("Jogar Offline");
+        pnlStart.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, 130, 40));
+
+        jLabel7.setBackground(new java.awt.Color(229, 116, 25));
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jokenpo/assets/jogarOffline.png"))); // NOI18N
+        jLabel7.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        pnlStart.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 10, 110, 60));
+
+        btnCPU.setBackground(new java.awt.Color(255, 204, 0));
         btnCPU.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCPUActionPerformed(evt);
             }
         });
-        pnlStart.add(btnCPU, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 143, 48));
+        pnlStart.add(btnCPU, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 190, 60));
 
-        btnJogador.setText("Jogador");
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jokenpo/assets/jogarOnline.png"))); // NOI18N
+        pnlStart.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 10, 110, 60));
+
+        jLabel16.setFont(new java.awt.Font("Algerian", 1, 14)); // NOI18N
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel16.setText("Jogar Online");
+        pnlStart.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 20, 120, 40));
+
+        btnJogador.setBackground(new java.awt.Color(255, 204, 0));
         btnJogador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnJogadorActionPerformed(evt);
             }
         });
-        pnlStart.add(btnJogador, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, 143, 48));
+        pnlStart.add(btnJogador, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 10, 190, 60));
 
-        jPanel1.add(pnlStart, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 340, 390, 70));
+        jPanel1.add(pnlStart, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 340, 410, 80));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -446,8 +503,6 @@ public class Jogo extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
-        
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -487,12 +542,21 @@ public class Jogo extends javax.swing.JFrame {
     private javax.swing.JButton btnSair;
     private javax.swing.JButton btnTesoura;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblJogada1;
