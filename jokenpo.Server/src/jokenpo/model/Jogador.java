@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jokenpo.server;
+package jokenpo.model;
+
+import jokenpo.server.IJokenpoServer;
 
 /**
  *
@@ -11,8 +13,18 @@ package jokenpo.server;
  */
 public class Jogador {
     
+    private int id;
     private IJokenpoServer jogador;
     private String name;
+    private String jogada;
+    
+    public Jogador(int id, IJokenpoServer jogador, String name)
+    {
+        this.id = id;
+        this.jogador = jogador;
+        this.name = name;
+        this.jogada = null;
+    }
     
     public void setJogador(IJokenpoServer jogador)
     {
@@ -32,5 +44,15 @@ public class Jogador {
     public String getName()
     {
         return this.name;
+    }
+    
+    public void setJogada(String jogada)
+    {
+        this.jogada = jogada;
+    }
+    
+    public String getJogada()
+    {
+        return this.jogada;
     }
 }

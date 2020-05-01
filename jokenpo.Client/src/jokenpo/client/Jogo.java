@@ -5,10 +5,10 @@
  */
 package jokenpo.client;
 
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import javax.swing.JOptionPane;
-import jokenpo.server.JokenpoClient;
+import jokenpo.server.JokenpoServer;
 
 /**
  *
@@ -16,7 +16,7 @@ import jokenpo.server.JokenpoClient;
  */
 public class Jogo extends javax.swing.JFrame {
 
-    private final JokenpoClient controller = new JokenpoClient();
+    private JokenpoServer server;
     private static String name; 
     private int tipoJogo = 0;
     private int rodadas = 0;
@@ -30,11 +30,30 @@ public class Jogo extends javax.swing.JFrame {
         Inicio();
     }
     
-    public void Jogar(Boolean result) {
-        if (result == null)
-            JOptionPane.showMessageDialog(this, "Não foi possível se comunicar com o servidor. Tente novamente mais tarde!",
-                                          "Erro", JOptionPane.ERROR_MESSAGE);
-        else if (result == true)
+    public void Jogar() {
+        boolean result = true;
+        name = txtNome.getText();
+        
+        if (tipoJogo == 1)
+        {
+            try
+            {
+                server = new JokenpoServer(name);
+                String oponente = server.PlayOnline();
+                while (oponente == null)
+                {
+                    System.out.println("Aguarde enquanto encontramos um oponente...");
+                    oponente = server.PlayOnline();
+                }
+                lblOponente1.setText(oponente);
+            }
+            catch(Exception ex)
+            {
+                result = false;
+            }
+        }
+        
+        if (result == true)
         {
             pnlInicio.setVisible(false);
             pnlJogada.setVisible(true);
@@ -65,7 +84,19 @@ public class Jogo extends javax.swing.JFrame {
     private void GerarJogada()
     {
         String jogador1 = lblJogada1.getText();
-        String jogador2 = GetRandom();
+        String jogador2 = null;
+        
+        if (tipoJogo == 0)
+            jogador2 = GetRandom();
+        else
+        {
+            jogador2 = server.Jogar(jogador1);
+            while (jogador2 == null)
+            {
+                jogador2 = server.Oponente();
+            }
+        }
+        
         int placar1 = Integer.parseInt(lblMeuPlacar.getText());
         int placar2 = Integer.parseInt(lblPlacarOponente.getText());
         boolean empate = false;
@@ -363,17 +394,13 @@ public class Jogo extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCPUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCPUActionPerformed
-        name = txtNome.getText();
-        //Boolean _result = controller.Server_PlayWithCPU(name);
         tipoJogo = 0;
-        Jogar(true);
+        Jogar();
     }//GEN-LAST:event_btnCPUActionPerformed
 
     private void btnJogadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJogadorActionPerformed
-        name = txtNome.getText();
         tipoJogo = 1;
-        Boolean _result = controller.Server_PlayWithPlayer(name);
-        Jogar(_result);
+        Jogar();
     }//GEN-LAST:event_btnJogadorActionPerformed
 
     private void txtNomeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNomeKeyTyped
@@ -386,26 +413,25 @@ public class Jogo extends javax.swing.JFrame {
 
     private void btnPedraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPedraActionPerformed
         lblJogada1.setText("Pedra");
-        if (tipoJogo == 0)
-            GerarJogada();
+        GerarJogada();
     }//GEN-LAST:event_btnPedraActionPerformed
 
     private void btnPapelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPapelActionPerformed
         lblJogada1.setText("Papel");
-        if (tipoJogo == 0)
-            GerarJogada();
+        GerarJogada();
     }//GEN-LAST:event_btnPapelActionPerformed
 
     private void btnTesouraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTesouraActionPerformed
         lblJogada1.setText("Tesoura");
-        if (tipoJogo == 0)
-            GerarJogada();
+        GerarJogada();
     }//GEN-LAST:event_btnTesouraActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        
+        
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

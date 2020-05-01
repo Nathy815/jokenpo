@@ -13,6 +13,8 @@ import java.rmi.RemoteException;
  * @author nathy
  */
 public interface IJokenpoServer extends Remote {
-    int Connect(IJokenpoServer player, String name) throws RemoteException;
-    String PlayOnline(IJokenpoServer player, int index) throws RemoteException;
+    String Connect(IJokenpoServer player, String name) throws RemoteException;
+    String PlayOnline(int index, int jogador) throws RemoteException;
+    String Jogar(int index, int jogador, String jogada) throws RemoteException;
+    String getJogadaOponente(int index, int jogador) throws RemoteException;
 }

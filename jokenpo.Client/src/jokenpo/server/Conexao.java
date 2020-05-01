@@ -3,12 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jokenpo.model;
+package jokenpo.server;
 
 /**
  *
  * @author nathy
  */
-public class Client {
+public class Conexao {
     
+    public int partida;
+    public int jogador;
+    
+    public Conexao(int partida, int jogador)
+    {
+        this.partida = partida;
+        this.jogador = jogador;
+    }
 }
