@@ -13,7 +13,6 @@ import java.rmi.RemoteException;
  * @author nathy
  */
 public interface IJokenpoServer extends Remote {
-    Boolean PlayWithCPU(String name) throws RemoteException;
-    Boolean PlayWithPlayer(String name) throws RemoteException;
-    void Sair() throws RemoteException;
+    int Connect(IJokenpoServer player, String name) throws RemoteException;
+    String PlayOnline(IJokenpoServer player, int index) throws RemoteException;
 }

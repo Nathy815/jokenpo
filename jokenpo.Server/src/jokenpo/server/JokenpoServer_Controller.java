@@ -5,7 +5,11 @@
  */
 package jokenpo.server;
 
+import java.net.MalformedURLException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.ArrayList;
 
 /**
  *
@@ -13,20 +17,45 @@ import java.rmi.RemoteException;
  */
 public class JokenpoServer_Controller implements IJokenpoServer {
 
-    @Override
-    public Boolean PlayWithCPU(String name) throws RemoteException {
-        System.out.println(name + " escolheu jogar com CPU");
-        return true;
+    ArrayList<Partida> partidas;
+    
+    public JokenpoServer_Controller() throws RemoteException {
+        partidas = new ArrayList<Partida>();
     }
+    
+    public static void main(String[] arg) throws RemoteException, MalformedURLException {
+        
+        JokenpoServer_Controller server = new JokenpoServer_Controller();
+        
+        Registry registry = LocateRegistry.createRegistry(18000);
+        registry.rebind("Jokenpo", server);
 
-    @Override
-    public Boolean PlayWithPlayer(String name) throws RemoteException {
-        System.out.println(name + " escolheu jogar com outro jogador");
-        return false;
     }
     
     @Override
-    public void Sair() throws RemoteException {
-        System.out.println("Jogador saiu.");
+    public int Connect(IJokenpoServer player, String name) throws RemoteException {
+        for (int i = 0; i < partidas.size(); i++)
+        {
+            if (partidas.get(i).IsEmpty())
+            {
+                partidas.get(i).Adicionar(player, name);
+                return i;
+            }
+        }
+        
+        Partida partida = new Partida();
+        partida.Adicionar(player, name);
+        partidas.add(partida);
+        return partidas.size() - 1;
     }
+
+    @Override
+    public String PlayOnline(IJokenpoServer player, int index) throws RemoteException {
+        Partida partida = partidas.get(index);
+        if (partida.getPlayer1() == player)
+            return partida.getPlayer2().getName();
+        else
+            return partida.getPlayer1().getName();
+    }
+    
 }
