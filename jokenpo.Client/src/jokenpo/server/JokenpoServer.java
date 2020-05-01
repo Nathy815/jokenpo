@@ -24,7 +24,6 @@ public class JokenpoServer extends UnicastRemoteObject implements Runnable {
     
     public JokenpoServer(String name) throws RemoteException, NotBoundException
     {
-        System.out.println("Entrou");
         this.name = name;
         Registry registry = LocateRegistry.getRegistry("localhost", 18000);
         stub = (IJokenpoServer)registry.lookup("Jokenpo");

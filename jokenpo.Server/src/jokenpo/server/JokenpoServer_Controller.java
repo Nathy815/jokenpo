@@ -76,13 +76,11 @@ public class JokenpoServer_Controller extends UnicastRemoteObject implements IJo
         
         if (jogador == 1)
         {
-            System.out.println("Jogador 1 escolheu " + jogada);
             partida.getPlayer1().setJogada(jogada);
             return partida.getPlayer2().getJogada();
         }
         else
         {
-            System.out.println("Jogador 2 escolheu " + jogada);
             partida.getPlayer2().setJogada(jogada);
             return partida.getPlayer1().getJogada();
         }
@@ -97,15 +95,9 @@ public class JokenpoServer_Controller extends UnicastRemoteObject implements IJo
             return "EXIT";
             
         if (jogador == 1)
-        {
-            System.out.println("Resposta para Jogador 1 é " + partida.getPlayer2().getJogada());
             jogada = partida.getPlayer2().getJogada();
-        }
         else
-        {
-            System.out.println("Resposta para Jogador 2 é " + partida.getPlayer1().getJogada());
             jogada = partida.getPlayer1().getJogada();
-        }
         
         LimparRodada(partida);
         return jogada;
