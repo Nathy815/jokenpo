@@ -8,7 +8,6 @@ package jokenpo.client;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import javax.swing.JOptionPane;
-import jokenpo.server.Jokenpo;
 import jokenpo.server.JokenpoClient;
 
 /**
@@ -17,7 +16,6 @@ import jokenpo.server.JokenpoClient;
  */
 public class Jogo extends javax.swing.JFrame {
 
-    private Jokenpo model;
     private final JokenpoClient controller = new JokenpoClient();
     private static String name; 
     private int tipoJogo = 0;
