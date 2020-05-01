@@ -65,7 +65,6 @@ public class JokenpoServer extends UnicastRemoteObject implements Runnable {
     {
         try
         {
-            System.out.println("Jogando partida " + partida + " como jogador " + jogador + " escolhi " + jogada);
             return stub.Jogar(partida, jogador, jogada);
         }
         catch(Exception ex)
@@ -83,6 +82,21 @@ public class JokenpoServer extends UnicastRemoteObject implements Runnable {
         catch(Exception ex)
         {
             return null;
+        }
+    }
+    
+    public boolean Sair()
+    {
+        try
+        {
+            boolean response = stub.Sair(partida);
+            partida = -1;
+            jogador = -1;
+            return response;
+        }
+        catch(Exception ex)
+        {
+            return false;
         }
     }
 }

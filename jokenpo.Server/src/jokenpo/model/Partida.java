@@ -18,10 +18,13 @@ public class Partida {
     
     private Jogador player2;
     
+    private boolean available;
+    
     public Partida()
     {
         player1 = null;
         player2 = null;
+        available = true;
     }
             
     public Jogador getPlayer1()
@@ -32,6 +35,16 @@ public class Partida {
     public Jogador getPlayer2()
     {
         return this.player2;
+    }
+    
+    public boolean getAvailable()
+    {
+        return this.available;
+    }
+    
+    public void setAvailable()
+    {
+        this.available = false;
     }
     
     public void Adicionar(IJokenpoServer jokenpo, String name)

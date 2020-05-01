@@ -7,7 +7,6 @@ package jokenpo.server;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import jokenpo.model.Conexao;
 
 /**
  *
@@ -18,4 +17,5 @@ public interface IJokenpoServer extends Remote {
     String PlayOnline(int index, int jogador) throws RemoteException;
     String Jogar(int index, int jogador, String jogada) throws RemoteException;
     String getJogadaOponente(int index, int jogador) throws RemoteException;
+    boolean Sair(int index) throws RemoteException;
 }

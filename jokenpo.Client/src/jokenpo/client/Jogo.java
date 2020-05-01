@@ -68,6 +68,12 @@ public class Jogo extends javax.swing.JFrame {
                                           "Atenção", JOptionPane.WARNING_MESSAGE);
     }
     
+    public void Sair()
+    {
+        server.Sair();
+        Inicio();
+    }
+    
     public void Inicio() {
         pnlInicio.setVisible(true);
         pnlJogada.setVisible(false);
@@ -101,44 +107,54 @@ public class Jogo extends javax.swing.JFrame {
         int placar2 = Integer.parseInt(lblPlacarOponente.getText());
         boolean empate = false;
         rodadas += 1;
+        boolean sair = false;
         
-        lblJogada2.setText(jogador2);
-        
-        if (jogador1 == "Pedra")
-        {
-            if (jogador2 == "Papel")
-                lblPlacarOponente.setText(String.valueOf(placar2 + 1));
-            else if (jogador2 == "Tesoura")
-                lblMeuPlacar.setText(String.valueOf((placar1 + 1)));
-            else
-                empate = true;
-        }
-        else if (jogador1 == "Papel")
-        {
-            if (jogador2 == "Tesoura")
-                lblPlacarOponente.setText(String.valueOf(placar2 + 1));
-            else if (jogador2 == "Pedra")
-                lblMeuPlacar.setText(String.valueOf((placar1 + 1)));
-            else
-                empate = true;
-        }
+        if (jogador2.equals("EXIT"))
+            sair = true;
         else
         {
-            if (jogador2 == "Pedra")
-                lblPlacarOponente.setText(String.valueOf(placar2 + 1));
-            else if (jogador2 == "Papel")
-                lblMeuPlacar.setText(String.valueOf((placar1 + 1)));
+            lblJogada2.setText(jogador2);
+
+            if (jogador1.equals("Pedra"))
+            {
+                if (jogador2.equals("Papel"))
+                    lblPlacarOponente.setText(String.valueOf(placar2 + 1));
+                else if (jogador2.equals("Tesoura"))
+                    lblMeuPlacar.setText(String.valueOf((placar1 + 1)));
+                else
+                    empate = true;
+            }
+            else if (jogador1.equals("Papel"))
+            {
+                if (jogador2.equals("Tesoura"))
+                    lblPlacarOponente.setText(String.valueOf(placar2 + 1));
+                else if (jogador2.equals("Pedra"))
+                    lblMeuPlacar.setText(String.valueOf((placar1 + 1)));
+                else
+                    empate = true;
+            }
             else
-                empate = true;
+            {
+                if (jogador2.equals("Pedra"))
+                    lblPlacarOponente.setText(String.valueOf(placar2 + 1));
+                else if (jogador2.equals("Papel"))
+                    lblMeuPlacar.setText(String.valueOf((placar1 + 1)));
+                else
+                    empate = true;
+            }
         }
         
-        if (rodadas == finish)
+        if (rodadas == finish || sair)
         {
-            String mensagem = "Você venceu! :)";
-            if (placar1 == placar2)
-                mensagem = "Você empatou! ;)";
-            else if (placar2 > placar1)
-                mensagem = "Você perdeu... :(";
+            String mensagem = "Seu oponente saiu, você venceu! :)";
+            if (!sair)
+            {
+                mensagem = "Você venceu! :)";
+                if (placar1 == placar2)
+                    mensagem = "Você empatou! ;)";
+                else if (placar2 > placar1)
+                    mensagem = "Você perdeu... :(";
+            }
             lblResultado.setText(mensagem);
             pnlPlacar.setVisible(false);
             pnlJogada.setVisible(false);
@@ -408,7 +424,7 @@ public class Jogo extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNomeKeyTyped
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
-        Inicio();
+        Sair();
     }//GEN-LAST:event_btnSairActionPerformed
 
     private void btnPedraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPedraActionPerformed

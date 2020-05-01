@@ -12,7 +12,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import jokenpo.model.Conexao;
 
 /**
  *
@@ -41,7 +40,7 @@ public class JokenpoServer_Controller extends UnicastRemoteObject implements IJo
         
         for (int i = 0; i < partidas.size(); i++)
         {
-            if (partidas.get(i).IsEmpty())
+            if (partidas.get(i).IsEmpty() && partidas.get(i).getAvailable())
             {
                 partidas.get(i).Adicionar(player, name);
                 return i + "-2";
@@ -71,6 +70,10 @@ public class JokenpoServer_Controller extends UnicastRemoteObject implements IJo
     @Override
     public String Jogar(int index, int jogador, String jogada) throws RemoteException {
         Partida partida = partidas.get(index);
+        
+        if (!partida.getAvailable())
+            return "EXIT";
+        
         if (jogador == 1)
         {
             System.out.println("Jogador 1 escolheu " + jogada);
@@ -89,6 +92,10 @@ public class JokenpoServer_Controller extends UnicastRemoteObject implements IJo
     public String getJogadaOponente(int index, int jogador) throws RemoteException {
         Partida partida = partidas.get(index);
         String jogada = null;
+        
+        if (!partida.getAvailable())
+            return "EXIT";
+            
         if (jogador == 1)
         {
             System.out.println("Resposta para Jogador 1 é " + partida.getPlayer2().getJogada());
@@ -112,5 +119,12 @@ public class JokenpoServer_Controller extends UnicastRemoteObject implements IJo
             partida.getPlayer1().setJogada(null);
             partida.getPlayer2().setJogada(null);
         }
+    }
+
+    @Override
+    public boolean Sair(int index) throws RemoteException {
+        Partida partida = partidas.get(index);
+        partida.setAvailable();
+        return true;
     }
 }
