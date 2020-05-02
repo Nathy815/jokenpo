@@ -25,6 +25,7 @@ public class Jogo extends javax.swing.JFrame {
     private int tipoJogo = 0;
     private int rodadas = 0;
     private int finish = 5;
+    private String jogador1 = "Teste";
 
     /**
      * Creates new form Jogo
@@ -93,7 +94,7 @@ public class Jogo extends javax.swing.JFrame {
 
     private Image retornaIcon(String jogada) {
         Image dimg;
-        if (jogada.equals("pedra")) {
+        if (jogada.equals("Pedra")) {
             String path = System.getProperty("user.dir") + "\\src\\jokenpo\\assets\\pedra.png";
             BufferedImage img = null;
 
@@ -103,7 +104,7 @@ public class Jogo extends javax.swing.JFrame {
                 e.getMessage();
             }
             dimg = img.getScaledInstance(lblJogada1.getWidth(), lblJogada1.getHeight(), Image.SCALE_SMOOTH);
-        } else if (jogada.equals("papel")) {
+        } else if (jogada.equals("Papel")) {
             String path = System.getProperty("user.dir") + "\\src\\jokenpo\\assets\\papel.png";
             BufferedImage img = null;
 
@@ -128,9 +129,10 @@ public class Jogo extends javax.swing.JFrame {
     }
 
     private void GerarJogada() {
-        String jogador1 = lblJogada1.getText();
         String jogador2 = null;
 
+        System.out.println("Jogador 1: " + jogador1);
+        
         if (tipoJogo == 0) {
             jogador2 = GetRandom();
         } else {
@@ -509,20 +511,20 @@ public class Jogo extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSairActionPerformed
 
     private void btnPedraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPedraActionPerformed
-
-        lblJogada1.setIcon(new ImageIcon(retornaIcon("pedra")));
+        jogador1 = "Pedra";
+        lblJogada1.setIcon(new ImageIcon(retornaIcon(jogador1)));
         GerarJogada();
     }//GEN-LAST:event_btnPedraActionPerformed
 
     private void btnPapelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPapelActionPerformed
-
-        lblJogada1.setIcon(new ImageIcon(retornaIcon("papel")));
+        jogador1 = "Papel";
+        lblJogada1.setIcon(new ImageIcon(retornaIcon(jogador1)));
         GerarJogada();
     }//GEN-LAST:event_btnPapelActionPerformed
 
     private void btnTesouraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTesouraActionPerformed
-
-        lblJogada1.setIcon(new ImageIcon(retornaIcon("tesoura")));
+        jogador1 = "Tesoura";
+        lblJogada1.setIcon(new ImageIcon(retornaIcon(jogador1)));
         GerarJogada();
     }//GEN-LAST:event_btnTesouraActionPerformed
 
