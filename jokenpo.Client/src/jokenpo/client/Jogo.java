@@ -5,8 +5,12 @@
  */
 package jokenpo.client;
 
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import jokenpo.server.JokenpoServer;
 
@@ -17,11 +21,11 @@ import jokenpo.server.JokenpoServer;
 public class Jogo extends javax.swing.JFrame {
 
     private JokenpoServer server;
-    private static String name; 
+    private static String name;
     private int tipoJogo = 0;
     private int rodadas = 0;
     private int finish = 5;
-    
+
     /**
      * Creates new form Jogo
      */
@@ -29,38 +33,30 @@ public class Jogo extends javax.swing.JFrame {
         initComponents();
         Inicio();
     }
-    
+
     public void Jogar() {
         boolean result = true;
         name = txtNome.getText();
-     
-        if (name == null || name.trim().equals(""))
-        {
+
+        if (name == null || name.trim().equals("")) {
             JOptionPane.showMessageDialog(this, "Digite seu nome!",
-                                          "Atenção", JOptionPane.WARNING_MESSAGE);
-        }
-        else {
-            if (tipoJogo == 1)
-            {
-                try
-                {
+                    "Atenção", JOptionPane.WARNING_MESSAGE);
+        } else {
+            if (tipoJogo == 1) {
+                try {
                     server = new JokenpoServer(name);
                     String oponente = server.PlayOnline();
-                    while (oponente == null)
-                    {
+                    while (oponente == null) {
                         System.out.println("Aguarde enquanto encontramos um oponente...");
                         oponente = server.PlayOnline();
                     }
                     lblOponente1.setText(oponente);
-                }
-                catch(Exception ex)
-                {
+                } catch (Exception ex) {
                     result = false;
                 }
             }
 
-            if (result == true)
-            {
+            if (result == true) {
                 pnlInicio.setVisible(false);
                 pnlJogada.setVisible(true);
                 btnSair.setVisible(true);
@@ -68,20 +64,20 @@ public class Jogo extends javax.swing.JFrame {
                 pnlJogadas.setVisible(true);
                 pnlStart.setVisible(false);
                 lblJogador1.setText(name);
-            }
-            else
+            } else {
                 JOptionPane.showMessageDialog(this, "Não há jogadores disponíveis no momento!",
-                                              "Atenção", JOptionPane.WARNING_MESSAGE);
+                        "Atenção", JOptionPane.WARNING_MESSAGE);
+            }
         }
     }
-    
-    public void Sair()
-    {
-        if (tipoJogo == 1)
+
+    public void Sair() {
+        if (tipoJogo == 1) {
             server.Sair();
+        }
         Inicio();
     }
-    
+
     public void Inicio() {
         pnlInicio.setVisible(true);
         pnlJogada.setVisible(false);
@@ -94,74 +90,103 @@ public class Jogo extends javax.swing.JFrame {
         pnlResultado.setVisible(false);
         ResetJogo();
     }
-    
-    private void GerarJogada()
-    {
+
+    private Image retornaIcon(String jogada) {
+        Image dimg;
+        if (jogada.equals("pedra")) {
+            String path = System.getProperty("user.dir") + "\\src\\jokenpo\\assets\\pedra.png";
+            BufferedImage img = null;
+
+            try {
+                img = ImageIO.read(new File(path));
+            } catch (IOException e) {
+                e.getMessage();
+            }
+            dimg = img.getScaledInstance(lblJogada1.getWidth(), lblJogada1.getHeight(), Image.SCALE_SMOOTH);
+        } else if (jogada.equals("papel")) {
+            String path = System.getProperty("user.dir") + "\\src\\jokenpo\\assets\\papel.png";
+            BufferedImage img = null;
+
+            try {
+                img = ImageIO.read(new File(path));
+            } catch (IOException e) {
+                e.getMessage();
+            }
+            dimg = img.getScaledInstance(lblJogada1.getWidth(), lblJogada1.getHeight(), Image.SCALE_SMOOTH);
+        } else {
+            String path = System.getProperty("user.dir") + "\\src\\jokenpo\\assets\\tesoura.png";
+            BufferedImage img = null;
+
+            try {
+                img = ImageIO.read(new File(path));
+            } catch (IOException e) {
+                e.getMessage();
+            }
+            dimg = img.getScaledInstance(lblJogada1.getWidth(), lblJogada1.getHeight(), Image.SCALE_SMOOTH);
+        }
+        return dimg;
+    }
+
+    private void GerarJogada() {
         String jogador1 = lblJogada1.getText();
         String jogador2 = null;
-        
-        if (tipoJogo == 0)
+
+        if (tipoJogo == 0) {
             jogador2 = GetRandom();
-        else
-        {
+        } else {
             jogador2 = server.Jogar(jogador1);
-            while (jogador2 == null)
-            {
+            while (jogador2 == null) {
                 jogador2 = server.Oponente();
             }
         }
-        
+
         int placar1 = Integer.parseInt(lblMeuPlacar.getText());
         int placar2 = Integer.parseInt(lblPlacarOponente.getText());
         boolean empate = false;
         rodadas += 1;
         boolean sair = false;
-        
-        if (jogador2.equals("EXIT"))
-            sair = true;
-        else
-        {
-            lblJogada2.setText(jogador2);
 
-            if (jogador1.equals("Pedra"))
-            {
-                if (jogador2.equals("Papel"))
+        if (jogador2.equals("EXIT")) {
+            sair = true;
+        } else {
+            lblJogada2.setIcon(new ImageIcon(retornaIcon(jogador2)));
+
+            if (jogador1.equals("Pedra")) {
+                if (jogador2.equals("Papel")) {
                     lblPlacarOponente.setText(String.valueOf(placar2 + 1));
-                else if (jogador2.equals("Tesoura"))
+                } else if (jogador2.equals("Tesoura")) {
                     lblMeuPlacar.setText(String.valueOf((placar1 + 1)));
-                else
+                } else {
                     empate = true;
-            }
-            else if (jogador1.equals("Papel"))
-            {
-                if (jogador2.equals("Tesoura"))
+                }
+            } else if (jogador1.equals("Papel")) {
+                if (jogador2.equals("Tesoura")) {
                     lblPlacarOponente.setText(String.valueOf(placar2 + 1));
-                else if (jogador2.equals("Pedra"))
+                } else if (jogador2.equals("Pedra")) {
                     lblMeuPlacar.setText(String.valueOf((placar1 + 1)));
-                else
+                } else {
                     empate = true;
-            }
-            else
-            {
-                if (jogador2.equals("Pedra"))
+                }
+            } else {
+                if (jogador2.equals("Pedra")) {
                     lblPlacarOponente.setText(String.valueOf(placar2 + 1));
-                else if (jogador2.equals("Papel"))
+                } else if (jogador2.equals("Papel")) {
                     lblMeuPlacar.setText(String.valueOf((placar1 + 1)));
-                else
+                } else {
                     empate = true;
+                }
             }
         }
-        
-        if (rodadas == finish || sair)
-        {
+
+        if (rodadas == finish || sair) {
             String mensagem = "Seu oponente saiu, você venceu! :)";
-            if (!sair)
-            {
+            if (!sair) {
                 mensagem = "Você venceu! :)";
-                if (placar1 == placar2)
+                if (placar1 == placar2) {
                     mensagem = "Você empatou! ;)";
-                else if (placar2 > placar1)
+                } else if (placar2 > placar1) {
                     mensagem = "Você perdeu... :(";
+                }
             }
             lblResultado.setText(mensagem);
             pnlPlacar.setVisible(false);
@@ -170,16 +195,14 @@ public class Jogo extends javax.swing.JFrame {
             pnlResultado.setVisible(true);
         }
     }
-    
-    private String GetRandom() 
-    {
-        int r = (int) (Math.random()*3);
-        String name = new String [] {"Pedra", "Papel", "Tesoura"}[r];
+
+    private String GetRandom() {
+        int r = (int) (Math.random() * 3);
+        String name = new String[]{"Pedra", "Papel", "Tesoura"}[r];
         return name;
     }
-    
-    private void ResetJogo()
-    {
+
+    private void ResetJogo() {
         lblJogador1.setText("Jogador");
         lblOponente1.setText("CPU");
         lblMeuPlacar.setText("0");
@@ -277,13 +300,14 @@ public class Jogo extends javax.swing.JFrame {
 
         jPanel1.add(pnlInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 130, 407, 70));
 
-        btnSair.setText("Sair");
+        btnSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jokenpo/assets/exit.png"))); // NOI18N
+        btnSair.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(243, 190, 42), new java.awt.Color(243, 190, 42), new java.awt.Color(243, 190, 42), new java.awt.Color(243, 190, 42)));
         btnSair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSairActionPerformed(evt);
             }
         });
-        jPanel1.add(btnSair, new org.netbeans.lib.awtextra.AbsoluteConstraints(787, 11, -1, -1));
+        jPanel1.add(btnSair, new org.netbeans.lib.awtextra.AbsoluteConstraints(787, 11, 60, 40));
 
         pnlJogada.setBackground(new java.awt.Color(243, 190, 43));
         pnlJogada.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -391,7 +415,7 @@ public class Jogo extends javax.swing.JFrame {
         jLabel12.setForeground(new java.awt.Color(75, 50, 39));
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setText("X");
-        pnlJogadas.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 40, 53, -1));
+        pnlJogadas.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 40, 53, -1));
 
         lblJogada1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         pnlJogadas.add(lblJogada1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 100, 110));
@@ -456,7 +480,7 @@ public class Jogo extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 856, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -485,17 +509,20 @@ public class Jogo extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSairActionPerformed
 
     private void btnPedraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPedraActionPerformed
-        lblJogada1.setText("Pedra");
+
+        lblJogada1.setIcon(new ImageIcon(retornaIcon("pedra")));
         GerarJogada();
     }//GEN-LAST:event_btnPedraActionPerformed
 
     private void btnPapelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPapelActionPerformed
-        lblJogada1.setText("Papel");
+
+        lblJogada1.setIcon(new ImageIcon(retornaIcon("papel")));
         GerarJogada();
     }//GEN-LAST:event_btnPapelActionPerformed
 
     private void btnTesouraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTesouraActionPerformed
-        lblJogada1.setText("Tesoura");
+
+        lblJogada1.setIcon(new ImageIcon(retornaIcon("tesoura")));
         GerarJogada();
     }//GEN-LAST:event_btnTesouraActionPerformed
 
