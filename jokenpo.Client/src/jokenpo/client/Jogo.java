@@ -212,6 +212,10 @@ public class Jogo extends javax.swing.JFrame {
         lblPlacarOponente.setText("0");
         lblJogada1.setText("");
         lblJogada2.setText("");
+        lblMeuPlacar.setText("0");
+        lblPlacarOponente.setText("0");
+        lblJogada1.setIcon(null);
+        lblJogada2.setIcon(null);
         rodadas = 0;
         tipoJogo = 0;
     }
