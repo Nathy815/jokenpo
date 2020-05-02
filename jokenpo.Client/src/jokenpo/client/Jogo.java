@@ -9,6 +9,8 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -25,7 +27,6 @@ public class Jogo extends javax.swing.JFrame {
     private int tipoJogo = 0;
     private int rodadas = 0;
     private int finish = 5;
-    private String jogador1 = "Teste";
 
     /**
      * Creates new form Jogo
@@ -94,7 +95,7 @@ public class Jogo extends javax.swing.JFrame {
 
     private Image retornaIcon(String jogada) {
         Image dimg;
-        if (jogada.equals("Pedra")) {
+        if (jogada.toLowerCase().equals("pedra")) {
             String path = System.getProperty("user.dir") + "\\src\\jokenpo\\assets\\pedra.png";
             BufferedImage img = null;
 
@@ -104,7 +105,7 @@ public class Jogo extends javax.swing.JFrame {
                 e.getMessage();
             }
             dimg = img.getScaledInstance(lblJogada1.getWidth(), lblJogada1.getHeight(), Image.SCALE_SMOOTH);
-        } else if (jogada.equals("Papel")) {
+        } else if (jogada.toLowerCase().equals("papel")) {
             String path = System.getProperty("user.dir") + "\\src\\jokenpo\\assets\\papel.png";
             BufferedImage img = null;
 
@@ -129,10 +130,9 @@ public class Jogo extends javax.swing.JFrame {
     }
 
     private void GerarJogada() {
+        String jogador1 = lblJogada1.getText();
         String jogador2 = null;
 
-        System.out.println("Jogador 1: " + jogador1);
-        
         if (tipoJogo == 0) {
             jogador2 = GetRandom();
         } else {
@@ -151,8 +151,9 @@ public class Jogo extends javax.swing.JFrame {
         if (jogador2.equals("EXIT")) {
             sair = true;
         } else {
+            //lblJogada2.setText(jogador2);
             lblJogada2.setIcon(new ImageIcon(retornaIcon(jogador2)));
-
+            
             if (jogador1.equals("Pedra")) {
                 if (jogador2.equals("Papel")) {
                     lblPlacarOponente.setText(String.valueOf(placar2 + 1));
@@ -303,13 +304,13 @@ public class Jogo extends javax.swing.JFrame {
         jPanel1.add(pnlInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 130, 407, 70));
 
         btnSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jokenpo/assets/exit.png"))); // NOI18N
-        btnSair.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(243, 190, 42), new java.awt.Color(243, 190, 42), new java.awt.Color(243, 190, 42), new java.awt.Color(243, 190, 42)));
+        btnSair.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(243, 190, 42), new java.awt.Color(243, 190, 42), new java.awt.Color(243, 190, 42), new java.awt.Color(243, 190, 42)));
         btnSair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSairActionPerformed(evt);
             }
         });
-        jPanel1.add(btnSair, new org.netbeans.lib.awtextra.AbsoluteConstraints(787, 11, 60, 40));
+        jPanel1.add(btnSair, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 10, 70, 40));
 
         pnlJogada.setBackground(new java.awt.Color(243, 190, 43));
         pnlJogada.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -417,7 +418,7 @@ public class Jogo extends javax.swing.JFrame {
         jLabel12.setForeground(new java.awt.Color(75, 50, 39));
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setText("X");
-        pnlJogadas.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 40, 53, -1));
+        pnlJogadas.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 40, 53, -1));
 
         lblJogada1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         pnlJogadas.add(lblJogada1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 100, 110));
@@ -511,20 +512,23 @@ public class Jogo extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSairActionPerformed
 
     private void btnPedraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPedraActionPerformed
-        jogador1 = "Pedra";
-        lblJogada1.setIcon(new ImageIcon(retornaIcon(jogador1)));
+        
+        lblJogada1.setIcon(new ImageIcon(retornaIcon("Pedra")));
+        lblJogada1.setText("Pedra");
         GerarJogada();
     }//GEN-LAST:event_btnPedraActionPerformed
 
     private void btnPapelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPapelActionPerformed
-        jogador1 = "Papel";
-        lblJogada1.setIcon(new ImageIcon(retornaIcon(jogador1)));
+       
+        lblJogada1.setIcon(new ImageIcon(retornaIcon("Papel")));
+        lblJogada1.setText("Papel");
         GerarJogada();
     }//GEN-LAST:event_btnPapelActionPerformed
 
     private void btnTesouraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTesouraActionPerformed
-        jogador1 = "Tesoura";
-        lblJogada1.setIcon(new ImageIcon(retornaIcon(jogador1)));
+        
+        lblJogada1.setIcon(new ImageIcon(retornaIcon("Tesoura")));
+        lblJogada1.setText("Tesoura");
         GerarJogada();
     }//GEN-LAST:event_btnTesouraActionPerformed
 

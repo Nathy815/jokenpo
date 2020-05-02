@@ -148,7 +148,7 @@
               <Image iconType="3" name="/jokenpo/assets/exit.png"/>
             </Property>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+              <Border info="org.netbeans.modules.form.compat2.border.BevelBorderInfo">
                 <BevelBorder>
                   <Color PropertyName="highlightOuter" blue="2a" green="be" red="f3" type="rgb"/>
                   <Color PropertyName="highlightInner" blue="2a" green="be" red="f3" type="rgb"/>
@@ -163,7 +163,7 @@
           </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="787" y="11" width="60" height="40"/>
+              <AbsoluteConstraints x="770" y="10" width="70" height="40"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -469,7 +469,7 @@
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="190" y="40" width="53" height="-1"/>
+                  <AbsoluteConstraints x="170" y="40" width="53" height="-1"/>
                 </Constraint>
               </Constraints>
             </Component>
